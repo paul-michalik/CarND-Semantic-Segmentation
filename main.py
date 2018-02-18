@@ -43,6 +43,25 @@ def load_vgg(sess, vgg_path):
     return image_input, keep_prob, layer3_out, layer4_out, layer7_out
 tests.test_load_vgg(load_vgg, tf)
 
+def conv_1x1(inputs, num_classes):
+    return tf.layers.conv2d(inputs, 
+                            num_classes,
+                            kernel_size = 1,
+                            strides = (1, 1),
+                            padding = 'SAME',
+                            kernel_initializer = tf.random_normal_initializer(stddev=0.01),
+                            kernel_regularizer = tf.contrib.layers.l2_regularizer(1e-3))
+
+def upsample(inputs, num_classes, kernel_size, strides):
+    return tf.layers.conv2d_transpose(inputs,
+                                      num_classes,
+                                      kernel_size, 
+                                      strides,
+                                      padding = 'SAME',
+                                      kernel_initializer = tf.truncated_normal_initializer(stddev=0.01),             kernel_regularizer = tf.contrib.layers.l2_regularizer(1e-3))
+
+def skip(origin, destination):
+    return tf.add(origin, destination)
 
 def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     """
@@ -54,7 +73,18 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     :return: The Tensor for the last layer of output
     """
     # TODO: Implement function
-    return None
+    layer7_1x1 = conv_1x1(vgg_layer7_out, num_classes)
+    layer4_1x1 = conv_1x1(vgg_layer4_out, num_classes)
+    layer3_1x1 = conv_1x1(vgg_layer3_out, num_classes)
+
+    layer7_up = upsample(layer7_1x1, num_classes, 5, 2) 
+    layer4_skip = skip(layer7_up, layer4_1x1)
+
+    layer4_up = upsample(layer4_skip, num_classes, 5, 2)
+    layer3_skip = skip(layer4_up, layer3_1x1)
+
+    model = upsample(layer3_skip, num_classes, 16, 8)
+    return model
 tests.test_layers(layers)
 
 
