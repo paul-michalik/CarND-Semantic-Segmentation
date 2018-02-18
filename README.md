@@ -2,7 +2,7 @@
 
 ### Setup fixes (as usual, Udacity I am pointing at you...)
 
-`conda env create -f ss-carnd-gpu` will create a compatible environment. Tested on Windows 10 using Anaconda 5.0.0 installed via Visual Studio 2017. Activate environment as `activate ss-carnd-gpu` or use the Visual Studio Python Environments tab.
+`conda env create -f ss-carnd-gpu.yml` will create a compatible environment. Tested on Windows 10 using Anaconda 5.0.0 installed via Visual Studio 2017. Activate environment as `activate ss-carnd-gpu` or use the Visual Studio Python Environments tab.
 
 - TensorFlow 1.5 requires CUDA 9.0 (not 9.1!) and compatible CuDNN 7.0
 - Add tqdm (it wasn't mentioned anywhere)
