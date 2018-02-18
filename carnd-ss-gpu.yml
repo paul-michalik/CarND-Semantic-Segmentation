@@ -1,0 +1,10 @@
+name: carnd-ss-gpu
+channels:
+    - https://conda.anaconda.org/menpo
+    - conda-forge
+dependencies:
+    - python>=3.6
+    - numpy
+    - scipy
+    - pip:
+        - tensorflow-gpu>=1.5
