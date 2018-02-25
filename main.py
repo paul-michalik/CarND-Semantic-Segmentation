@@ -180,8 +180,8 @@ def run():
         # TODO: Train NN using the train_nn function
         sess.run(tf.global_variables_initializer())
         train_nn(sess, 
-                 4, # epochs
-                 32, # batch_size
+                 8, # epochs
+                 24, # batch_size
                  get_batches_fn, 
                  train_op, 
                  loss, 
