@@ -100,7 +100,7 @@ ENV/
 # mypy
 .mypy_cache/
 
-RUNS/
+#RUNS/
 /.vs/slnx.sqlite
 /.vs/ProjectSettings.json
 /.vs/CarND-Semantic-Segmentation/v15

@@ -6,7 +6,7 @@
 
 - TensorFlow 1.5 requires CUDA 9.0 (not 9.1!) and compatible CuDNN 7.0
 - Add tqdm (it wasn't mentioned anywhere)
-
+- Add pillow. This is a implicit dependency for SciPy
 ### Introduction
 In this project, you'll label the pixels of a road in images using a Fully Convolutional Network (FCN).
 
