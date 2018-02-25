@@ -41,7 +41,7 @@ def load_vgg(sess, vgg_path):
     layer7_out = tf.get_default_graph().get_tensor_by_name(vgg_layer7_out_tensor_name)
 
     return image_input, keep_prob, layer3_out, layer4_out, layer7_out
-tests.test_load_vgg(load_vgg, tf)
+#tests.test_load_vgg(load_vgg, tf)
 
 def conv_1x1(inputs, num_classes):
     return tf.layers.conv2d(inputs, 
@@ -85,7 +85,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
 
     model = upsample(layer3_skip, num_classes, 16, 8)
     return model
-tests.test_layers(layers)
+#tests.test_layers(layers)
 
 
 def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
@@ -110,7 +110,7 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
     train_op = tf.train.AdamOptimizer(learning_rate= learning_rate).minimize(cross_entropy_loss)
 
     return logits, train_op, cross_entropy_loss
-tests.test_optimize(optimize)
+#tests.test_optimize(optimize)
 
 
 def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, input_image,
@@ -142,7 +142,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
                                })
 
             print("loss = {:.3f}".format(loss))
-tests.test_train_nn(train_nn)
+#tests.test_train_nn(train_nn)
 
 
 def run():
@@ -150,7 +150,7 @@ def run():
     image_shape = (160, 576)
     data_dir = './data'
     runs_dir = './runs'
-    tests.test_for_kitti_dataset(data_dir)
+    #tests.test_for_kitti_dataset(data_dir)
 
     # Download pretrained vgg model
     helper.maybe_download_pretrained_vgg(data_dir)
@@ -180,8 +180,8 @@ def run():
         # TODO: Train NN using the train_nn function
         sess.run(tf.global_variables_initializer())
         train_nn(sess, 
-                 8, # epochs
-                 24, # batch_size
+                 20, # epochs
+                 4, # batch_size
                  get_batches_fn, 
                  train_op, 
                  loss, 
