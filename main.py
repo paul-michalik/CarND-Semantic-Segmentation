@@ -41,7 +41,7 @@ def load_vgg(sess, vgg_path):
     layer7_out = tf.get_default_graph().get_tensor_by_name(vgg_layer7_out_tensor_name)
 
     return image_input, keep_prob, layer3_out, layer4_out, layer7_out
-#tests.test_load_vgg(load_vgg, tf)
+tests.test_load_vgg(load_vgg, tf)
 
 def conv_1x1(inputs, num_classes):
     return tf.layers.conv2d(inputs, 
@@ -85,7 +85,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
 
     model = upsample(layer3_skip, num_classes, 16, 8)
     return model
-#tests.test_layers(layers)
+tests.test_layers(layers)
 
 
 def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
@@ -110,11 +110,11 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
     train_op = tf.train.AdamOptimizer(learning_rate= learning_rate).minimize(cross_entropy_loss)
 
     return logits, train_op, cross_entropy_loss
-#tests.test_optimize(optimize)
+tests.test_optimize(optimize)
 
 
 def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, input_image,
-             correct_label, keep_prob, learning_rate):
+             correct_label, keep_prob, learning_rate, keep_prob_val = 0.5, learning_rate_val = 0.001):
     """
     Train neural network and print out the loss during training.
     :param sess: TF Session
@@ -134,10 +134,15 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
         print("epoch {} ...".format(e))
         for image, label in get_batches_fn(batch_size):
             _, loss = sess.run([train_op, cross_entropy_loss], 
-                               feed_dict={input_image: image, correct_label: label,                                keep_prob: keep_prob, learning_rate: learning_rate})
+                               feed_dict={
+                                   input_image: image, 
+                                   correct_label: label,
+                                   keep_prob: keep_prob_val, 
+                                   learning_rate: learning_rate_val
+                               })
 
             print("loss: = {:.3f}".format(loss))
-#tests.test_train_nn(train_nn)
+tests.test_train_nn(train_nn)
 
 
 def run():
@@ -164,11 +169,34 @@ def run():
         #  https://datascience.stackexchange.com/questions/5224/how-to-prepare-augment-images-for-neural-network
 
         # TODO: Build NN using load_vgg, layers, and optimize function
+        
+        input_image, keep_prob, layer3_out, layer4_out, layer7_out = load_vgg(sess, vgg_path)
+        nn_last_layer = layers(layer3_out, layer4_out, layer7_out, num_classes)
+
+        label = tf.placeholder(tf.int32, shape=[None, None, None, num_classes])
+        learning_rate = tf.placeholder(tf.float32)
+        logits, train_op, loss = optimize(nn_last_layer, label, learning_rate, num_classes)
 
         # TODO: Train NN using the train_nn function
-
+        sess.run(tf.global_variables_initializer())
+        train_nn(sess, 
+                 4, # epochs
+                 20, # batch_size
+                 get_batches_fn, 
+                 train_op, 
+                 loss, 
+                 input_image, 
+                 label, 
+                 keep_prob, 
+                 learning_rate)
         # TODO: Save inference data using helper.save_inference_samples
-        #  helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, input_image)
+        helper.save_inference_samples(runs_dir, 
+                                      data_dir, 
+                                      sess, 
+                                      image_shape, 
+                                      logits, 
+                                      keep_prob, 
+                                      input_image)
 
         # OPTIONAL: Apply the trained model to a video
 
