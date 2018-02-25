@@ -141,7 +141,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
                                    learning_rate: learning_rate_val
                                })
 
-            print("loss: = {:.3f}".format(loss))
+            print("loss = {:.3f}".format(loss))
 tests.test_train_nn(train_nn)
 
 
@@ -181,7 +181,7 @@ def run():
         sess.run(tf.global_variables_initializer())
         train_nn(sess, 
                  4, # epochs
-                 20, # batch_size
+                 32, # batch_size
                  get_batches_fn, 
                  train_op, 
                  loss, 
